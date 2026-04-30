@@ -2,198 +2,202 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Anyely 💖</title>
 
 <style>
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
-  text-align: center;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #0f0014, #2b0033);
   color: white;
-  overflow: hidden;
-  background: radial-gradient(circle, #1a001f, #000);
+  text-align: center;
+  overflow-x: hidden;
 }
 
-canvas {
+/* PANTALLA INICIAL */
+#inicio {
   position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 0;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
 }
 
-.contenido {
-  position: relative;
-  z-index: 2;
+#inicio button {
+  padding: 20px 30px;
+  font-size: 20px;
+  border: none;
+  border-radius: 15px;
+  background: #ff4b5c;
+  color: white;
+}
+
+/* CONTENIDO */
+.container {
+  display: none;
+  padding: 20px;
 }
 
 h1 {
-  margin-top: 60px;
-  font-size: 45px;
+  margin-top: 30px;
 }
 
+.sub {
+  color: #ffb3c6;
+}
+
+/* FOTO */
+img {
+  width: 200px;
+  border-radius: 20px;
+  margin-top: 20px;
+}
+
+/* BOTONES */
 button {
+  margin: 10px;
   padding: 12px 20px;
-  margin: 8px;
   border-radius: 10px;
   border: none;
-  cursor: pointer;
+  background: #ff4b5c;
+  color: white;
 }
 
-.carta {
-  display: none;
-  max-width: 600px;
-  margin: auto;
-  background: rgba(255,255,255,0.1);
+/* CARTA */
+.card {
+  max-width: 320px;
+  margin: 20px auto;
   padding: 20px;
-  border-radius: 20px;
+  border-radius: 15px;
+  background: rgba(255,255,255,0.1);
+  display: none;
 }
 
-/* Corazones */
-.corazon {
+/* CORAZONES */
+.heart {
   position: fixed;
-  color: pink;
-  font-size: 20px;
-  animation: subir 5s linear infinite;
+  font-size: 18px;
+  animation: subir 6s linear;
 }
 
 @keyframes subir {
   from {transform: translateY(0);}
   to {transform: translateY(-100vh);}
 }
+
+/* CONFETI */
+.confeti {
+  position: fixed;
+  width: 6px;
+  height: 6px;
+  top: -10px;
+  animation: caer linear forwards;
+}
+
+@keyframes caer {
+  to {transform: translateY(110vh);}
+}
 </style>
 </head>
 
 <body>
 
-<canvas id="fondo"></canvas>
-
-<div class="contenido">
-  <h1>🎉 ¡Feliz Cumpleaños Anyely! 🎉</h1>
-  <h3>De Ronaldo 💖</h3>
-
-  <h2 id="texto"></h2>
-
-  <button onclick="mostrarCarta()">💌 Ver mensaje</button>
-  <button onclick="toggleMusica()">🎵 Música</button>
-
-  <div class="carta" id="carta">
-    <p>
-      Anyely... 💖<br><br>
-      Hoy no es un día cualquiera ✨<br>
-      Hoy celebra el mundo el día en que llegaste 🌍<br><br>
-      Eres alguien muy especial, y mereces lo mejor 🥳<br>
-      Que nunca te falte una sonrisa 😊<br><br>
-      Sigue brillando siempre 🌟<br><br>
-      — Ronaldo 💌
-    </p>
-  </div>
+<!-- PANTALLA INICIAL -->
+<div id="inicio">
+  <button onclick="iniciar()">🎁 Abrir sorpresa</button>
 </div>
 
-<audio id="musica" loop>
+<!-- CONTENIDO -->
+<div class="container" id="contenido">
+
+<h1>🎉 Feliz Cumpleaños Anyely 🎉</h1>
+<p class="sub">De Ronaldo 💖</p>
+
+<img src="https://cdn.pixabay.com/photo/2017/01/31/13/14/birthday-2024765_1280.png">
+
+<h3 id="texto"></h3>
+
+<button onclick="verMensaje()">💌 Ver mensaje</button>
+<button onclick="toggleMusic()">🎵 Música</button>
+
+<div class="card" id="card">
+  <p>
+    Anyely 💖<br><br>
+    Hoy celebramos lo increíble que eres ✨<br>
+    Que cada día esté lleno de felicidad 🥳<br><br>
+    Nunca dejes de brillar 🌟<br><br>
+    Con mucho cariño,<br>
+    Ronaldo 💌
+  </p>
+</div>
+
+</div>
+
+<audio id="music" loop>
   <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3">
 </audio>
 
 <script>
-// TEXTO ESCRIBIÉNDOSE
-let mensaje = "Hoy celebramos algo muy especial 🎂✨";
+// INICIO
+function iniciar() {
+  document.getElementById("inicio").style.display = "none";
+  document.getElementById("contenido").style.display = "block";
+  escribir();
+  lanzarConfeti();
+}
+
+// TEXTO
+let mensaje = "Hoy es un día muy especial 🎂✨";
 let i = 0;
 function escribir() {
   if (i < mensaje.length) {
-    document.getElementById("texto").innerHTML += mensaje.charAt(i);
+    document.getElementById("texto").innerHTML += mensaje[i];
     i++;
-    setTimeout(escribir, 50);
+    setTimeout(escribir, 60);
   }
 }
-escribir();
 
-// CARTA
-function mostrarCarta() {
-  document.getElementById("carta").style.display = "block";
+// MENSAJE
+function verMensaje() {
+  document.getElementById("card").style.display = "block";
+  lanzarConfeti();
 }
 
 // MÚSICA
-let audio = document.getElementById("musica");
-function toggleMusica() {
-  if (audio.paused) {
-    audio.play();
-  } else {
-    audio.pause();
-  }
+let music = document.getElementById("music");
+function toggleMusic() {
+  music.paused ? music.play() : music.pause();
 }
 
-// CONFETI ANIMADO
-function confeti(x, y) {
-  for (let i = 0; i < 30; i++) {
-    let div = document.createElement("div");
-    div.style.position = "fixed";
-    div.style.width = "6px";
-    div.style.height = "6px";
-    div.style.background = ["red","yellow","blue","white"][Math.floor(Math.random()*4)];
-    div.style.left = x + "px";
-    div.style.top = y + "px";
-    document.body.appendChild(div);
-
-    let dx = (Math.random()-0.5)*10;
-    let dy = Math.random()*-10;
-
-    let intervalo = setInterval(() => {
-      let top = parseFloat(div.style.top);
-      let left = parseFloat(div.style.left);
-      div.style.top = (top - dy) + "px";
-      div.style.left = (left + dx) + "px";
-      dy -= 0.3;
-
-      if (top > window.innerHeight) {
-        clearInterval(intervalo);
-        div.remove();
-      }
-    }, 30);
+// CONFETI
+function lanzarConfeti() {
+  for (let i = 0; i < 80; i++) {
+    let c = document.createElement("div");
+    c.className = "confeti";
+    c.style.left = Math.random()*100 + "vw";
+    c.style.background = ["#ff4b5c","#ffd166","#06d6a0","#118ab2"][Math.floor(Math.random()*4)];
+    c.style.animationDuration = (Math.random()*3 + 2) + "s";
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),5000);
   }
 }
-
-// CLICK = EFECTO
-document.addEventListener("click", (e) => {
-  confeti(e.clientX, e.clientY);
-});
 
 // CORAZONES
-setInterval(() => {
-  let c = document.createElement("div");
-  c.className = "corazon";
-  c.innerHTML = "💖";
-  c.style.left = Math.random() * 100 + "vw";
-  document.body.appendChild(c);
-  setTimeout(()=>c.remove(),5000);
-}, 500);
+setInterval(()=>{
+  let h = document.createElement("div");
+  h.className = "heart";
+  h.innerHTML = "💖";
+  h.style.left = Math.random()*100 + "vw";
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),6000);
+}, 800);
 
-// FONDO PARTICULAS
-let canvas = document.getElementById("fondo");
-let ctx = canvas.getContext("2d");
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
-let estrellas = [];
-for (let i = 0; i < 100; i++) {
-  estrellas.push({
-    x: Math.random()*canvas.width,
-    y: Math.random()*canvas.height,
-    r: Math.random()*2
-  });
-}
-
-function animar() {
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  ctx.fillStyle = "white";
-  estrellas.forEach(e => {
-    ctx.beginPath();
-    ctx.arc(e.x, e.y, e.r, 0, Math.PI*2);
-    ctx.fill();
-    e.y += 0.2;
-    if (e.y > canvas.height) e.y = 0;
-  });
-  requestAnimationFrame(animar);
-}
-animar();
+// CLICK
+document.addEventListener("click", lanzarConfeti);
 </script>
 
 </body>
