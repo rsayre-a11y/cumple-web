@@ -8,13 +8,12 @@
 <style>
 body {
   margin: 0;
-  font-family: 'Segoe UI', sans-serif;
+  font-family: Arial;
   background: linear-gradient(135deg, #1a002b, #3a0066);
   color: white;
   text-align: center;
 }
 
-/* INICIO */
 #inicio {
   position: fixed;
   width: 100%;
@@ -34,7 +33,6 @@ body {
   color: white;
 }
 
-/* CONTENIDO */
 #contenido {
   display: none;
   padding: 20px;
@@ -49,7 +47,6 @@ button {
   color: white;
 }
 
-/* TARJETA */
 .card {
   display: none;
   background: rgba(255,255,255,0.1);
@@ -57,19 +54,6 @@ button {
   border-radius: 15px;
   margin: 20px auto;
   max-width: 300px;
-}
-
-/* CONFETI */
-.confeti {
-  position: fixed;
-  width: 6px;
-  height: 6px;
-  top: -10px;
-  animation: caer linear forwards;
-}
-
-@keyframes caer {
-  to { transform: translateY(110vh); }
 }
 </style>
 </head>
@@ -99,93 +83,66 @@ button {
 </div>
 
 <!-- AUDIO -->
-<audio id="music"></audio>
+<audio id="music" preload="auto"></audio>
 
 <script>
 // ELEMENTOS
 const btnStart = document.getElementById("btnStart");
-const inicio = document.getElementById("inicio");
 const contenido = document.getElementById("contenido");
+const inicio = document.getElementById("inicio");
 const card = document.getElementById("card");
 const music = document.getElementById("music");
 
-// PLAYLIST 🎶
+// PLAYLIST
 const canciones = [
   "https://cdn.pixabay.com/audio/2023/03/20/audio_9a9f5c13cb.mp3",
-  "https://cdn.pixabay.com/audio/2022/03/15/audio_3b2d7f0f4c.mp3",
-  "https://cdn.pixabay.com/audio/2022/10/25/audio_946b6f1cfd.mp3"
+  "https://cdn.pixabay.com/audio/2022/03/15/audio_3b2d7f0f4c.mp3"
 ];
 
 let indice = 0;
+let cargada = false;
+
+// CARGAR DESDE EL INICIO
+function prepararAudio() {
+  music.src = canciones[indice];
+  music.load();
+  cargada = true;
+}
 
 // INICIAR
 btnStart.addEventListener("click", () => {
   inicio.style.display = "none";
   contenido.style.display = "block";
-  lanzarConfeti();
+  prepararAudio();
 });
 
 // MENSAJE
 document.getElementById("btnMensaje").addEventListener("click", () => {
   card.style.display = "block";
-  lanzarConfeti();
 });
 
-// CARGAR CANCIÓN
-function cargarCancion(i) {
-  music.src = canciones[i];
-}
-
-// SIGUIENTE AUTOMÁTICO
+// SIGUIENTE CANCIÓN
 music.addEventListener("ended", () => {
   indice = (indice + 1) % canciones.length;
-  cargarCancion(indice);
+  music.src = canciones[indice];
   music.play().catch(()=>{});
 });
 
 // BOTÓN MÚSICA
 document.getElementById("btnMusica").addEventListener("click", () => {
 
+  if (!cargada) {
+    prepararAudio();
+  }
+
   if (music.paused) {
-    cargarCancion(indice);
-    music.volume = 0;
-    music.play().catch(()=>{});
-
-    // fade
-    let v = 0;
-    let fade = setInterval(() => {
-      if (v < 1) {
-        v += 0.05;
-        music.volume = v;
-      } else {
-        clearInterval(fade);
-      }
-    }, 200);
-
+    music.play().catch(() => {
+      alert("Toca otra vez el botón 🔊");
+    });
   } else {
     music.pause();
   }
 
-});
-
-// CONFETI
-function lanzarConfeti() {
-  for (let i = 0; i < 60; i++) {
-    let c = document.createElement("div");
-    c.className = "confeti";
-    c.style.left = Math.random()*100 + "vw";
-    c.style.background = ["red","yellow","blue","white"][Math.floor(Math.random()*4)];
-    c.style.animationDuration = (Math.random()*3 + 2) + "s";
-    document.body.appendChild(c);
-    setTimeout(()=>c.remove(),5000);
-  }
-}
-
-// SOLO CLICK FUERA DE BOTONES
-document.body.addEventListener("click", (e) => {
-  if (e.target.tagName !== "BUTTON") {
-    lanzarConfeti();
-  }
 });
 </script>
 
