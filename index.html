@@ -140,7 +140,7 @@ function cargarCancion(i) {
 music.addEventListener("ended", () => {
   indice = (indice + 1) % canciones.length;
   cargarCancion(indice);
-  music.play();
+  music.play().catch(()=>{});
 });
 
 // BOTÓN MÚSICA
@@ -149,7 +149,7 @@ document.getElementById("btnMusica").addEventListener("click", () => {
   if (music.paused) {
     cargarCancion(indice);
     music.volume = 0;
-    music.play();
+    music.play().catch(()=>{});
 
     // fade
     let v = 0;
@@ -181,8 +181,12 @@ function lanzarConfeti() {
   }
 }
 
-// TAP = EFECTO
-document.addEventListener("click", lanzarConfeti);
+// SOLO CLICK FUERA DE BOTONES
+document.body.addEventListener("click", (e) => {
+  if (e.target.tagName !== "BUTTON") {
+    lanzarConfeti();
+  }
+});
 </script>
 
 </body>
