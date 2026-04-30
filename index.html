@@ -15,11 +15,12 @@ body {
 }
 
 /* FONDO */
-canvas {
-  position:fixed;
-  inset:0;
-  z-index:0;
-}
+  canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none; /* 🔥 CLAVE */
+  }
 
 /* ESCENAS */
 .scene {
@@ -95,7 +96,7 @@ img {
 <!-- ESCENA 1 -->
 <div class="scene active" id="s1">
   <h1>🎁 Toca para comenzar</h1>
-  <button onclick="next()">Empezar</button>
+  <button id="btnStart">Empezar</button>
 </div>
 
 <!-- ESCENA 2 -->
@@ -136,6 +137,7 @@ img {
 </audio>
 
 <script>
+  document.getElementById("btnStart").addEventListener("click", next);
 // ESCENAS
 let i=1;
 function next(){
