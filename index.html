@@ -7,228 +7,151 @@
 
 <style>
 body {
-  margin:0;
-  font-family:'Segoe UI',system-ui;
-  background:#0d0015;
-  color:white;
-  overflow:hidden;
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #1a002b, #3a0066);
+  color: white;
+  text-align: center;
+  overflow-x: hidden;
 }
 
-/* FONDO */
-  canvas {
+/* PANTALLA INICIAL */
+#inicio {
   position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none; /* 🔥 CLAVE */
-  }
-
-/* ESCENAS */
-.scene {
-  position:absolute;
-  inset:0;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  flex-direction:column;
-  text-align:center;
-  opacity:0;
-  transition:1s;
-  z-index:1;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.scene.active { opacity:1; }
+#inicio button {
+  padding: 20px 30px;
+  font-size: 20px;
+  border-radius: 20px;
+  border: none;
+  background: linear-gradient(45deg, #ff4b5c, #ff7eb3);
+  color: white;
+}
 
-/* BOTÓN */
+/* CONTENIDO */
+#contenido {
+  display: none;
+  padding: 20px;
+}
+
+h1 {
+  margin-top: 30px;
+}
+
 button {
-  padding:14px 22px;
-  border-radius:14px;
-  border:none;
-  background:linear-gradient(45deg,#ff4b5c,#ff7eb3);
-  color:white;
-  margin-top:15px;
-}
-
-/* FOTO */
-img {
-  width:220px;
-  border-radius:20px;
-  margin-top:20px;
-  box-shadow:0 10px 30px rgba(0,0,0,0.5);
+  margin: 10px;
+  padding: 12px 20px;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(45deg, #ff4b5c, #ff7eb3);
+  color: white;
 }
 
 /* TARJETA */
 .card {
-  max-width:320px;
-  padding:25px;
-  border-radius:20px;
-  background:rgba(255,255,255,0.08);
-  backdrop-filter:blur(12px);
-  border:1px solid rgba(255,255,255,0.1);
-  opacity:0;
-  transform:scale(0.9);
-  transition:0.5s;
-}
-
-.card.show {
-  opacity:1;
-  transform:scale(1);
+  display: none;
+  margin: 20px auto;
+  max-width: 320px;
+  padding: 20px;
+  border-radius: 15px;
+  background: rgba(255,255,255,0.1);
 }
 
 /* CONFETI */
 .confeti {
-  position:fixed;
-  width:6px;
-  height:6px;
-  top:-10px;
-  animation:fall linear forwards;
+  position: fixed;
+  width: 6px;
+  height: 6px;
+  top: -10px;
+  animation: caer linear forwards;
 }
 
-@keyframes fall {
-  to { transform:translateY(110vh) rotate(360deg); }
+@keyframes caer {
+  to { transform: translateY(110vh); }
 }
 </style>
 </head>
 
 <body>
 
-<canvas id="bg"></canvas>
-
-<!-- ESCENA 1 -->
-<div class="scene active" id="s1">
-  <h1>🎁 Toca para comenzar</h1>
-  <button id="btnStart">Empezar</button>
+<div id="inicio">
+  <button id="btnStart">🎁 Abrir sorpresa</button>
 </div>
 
-<!-- ESCENA 2 -->
-<div class="scene" id="s2">
-  <h1>✨ Hoy no es un día cualquiera</h1>
-  <p id="texto"></p>
-  <button onclick="next()">Continuar</button>
-</div>
-
-<!-- ESCENA 3 FOTO -->
-<div class="scene" id="s3">
-  <h1>💖 Para alguien especial</h1>
-  <img src="https://cdn.pixabay.com/photo/2017/01/31/13/14/birthday-2024765_1280.png">
-  <button onclick="next()">Siguiente</button>
-</div>
-
-<!-- ESCENA FINAL -->
-<div class="scene" id="s4">
+<div id="contenido">
   <h1>🎉 Feliz Cumpleaños Anyely 🎉</h1>
   <p>De Ronaldo 💖</p>
 
-  <button onclick="mostrar()">💌 Ver mensaje</button>
+  <button id="btnMensaje">💌 Ver mensaje</button>
+  <button id="btnMusica">🎵 Música</button>
 
   <div class="card" id="card">
     <p>
       Anyely 💖<br><br>
-      Hoy celebramos lo increíble que eres ✨<br>
-      Que tu vida esté llena de momentos felices 🥳<br><br>
-      Nunca dejes de brillar 🌟<br><br>
-      Con cariño,<br>
-      Ronaldo 💌
+      Hoy es un día especial ✨<br>
+      Mereces lo mejor del mundo 🌍<br><br>
+      Nunca dejes de sonreír 😊<br><br>
+      — Ronaldo 💌
     </p>
   </div>
 </div>
 
 <audio id="music" loop>
-  <source src="https://cdn.pixabay.com/audio/2023/03/20/audio_9a9f5c13cb.mp3">
+  <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_3b2d7f0f4c.mp3">
 </audio>
 
 <script>
-  document.getElementById("btnStart").addEventListener("click", next);
-// ESCENAS
-let i=1;
-function next(){
-  document.getElementById("s"+i).classList.remove("active");
-  i++;
-  document.getElementById("s"+i).classList.add("active");
+// ELEMENTOS
+const btnStart = document.getElementById("btnStart");
+const inicio = document.getElementById("inicio");
+const contenido = document.getElementById("contenido");
+const card = document.getElementById("card");
+const music = document.getElementById("music");
 
-  if(i===2) escribir();
-  if(i===4){
-    musicaFade();
-    confeti(100);
-  }
-}
-
-// TEXTO
-let t="Porque hoy celebramos a alguien muy especial 🎂✨";
-let j=0;
-
-function escribir(){
-  let el=document.getElementById("texto");
-  function loop(){
-    if(j<t.length){
-      el.innerHTML+=t[j];
-      j++;
-      setTimeout(loop,50);
-    }
-  }
-  loop();
-}
+// INICIAR
+btnStart.addEventListener("click", () => {
+  inicio.style.display = "none";
+  contenido.style.display = "block";
+  lanzarConfeti();
+});
 
 // MENSAJE
-function mostrar(){
-  document.getElementById("card").classList.add("show");
-  confeti(60);
-}
+document.getElementById("btnMensaje").addEventListener("click", () => {
+  card.style.display = "block";
+  lanzarConfeti();
+});
+
+// MÚSICA
+document.getElementById("btnMusica").addEventListener("click", () => {
+  if (music.paused) {
+    music.play();
+  } else {
+    music.pause();
+  }
+});
 
 // CONFETI
-function confeti(n){
-  for(let k=0;k<n;k++){
-    let c=document.createElement("div");
-    c.className="confeti";
-    c.style.left=Math.random()*100+"vw";
-    c.style.background=["#ff4b5c","#ffd166","#06d6a0","#118ab2"][Math.floor(Math.random()*4)];
-    c.style.animationDuration=(Math.random()*3+2)+"s";
+function lanzarConfeti() {
+  for (let i = 0; i < 60; i++) {
+    let c = document.createElement("div");
+    c.className = "confeti";
+    c.style.left = Math.random()*100 + "vw";
+    c.style.background = ["red","yellow","blue","white"][Math.floor(Math.random()*4)];
+    c.style.animationDuration = (Math.random()*3 + 2) + "s";
     document.body.appendChild(c);
     setTimeout(()=>c.remove(),5000);
   }
 }
 
-// MÚSICA
-let music=document.getElementById("music");
-
-function musicaFade(){
-  music.volume=0;
-  music.play().catch(()=>{});
-  let v=0;
-  let fade=setInterval(()=>{
-    if(v<1){
-      v+=0.02;
-      music.volume=v;
-    } else clearInterval(fade);
-  },200);
-}
-
-// FONDO PARTICULAS
-let canvas=document.getElementById("bg");
-let ctx=canvas.getContext("2d");
-canvas.width=window.innerWidth;
-canvas.height=window.innerHeight;
-
-let stars=[];
-for(let i=0;i<100;i++){
-  stars.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*2});
-}
-
-function draw(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  ctx.fillStyle="white";
-  stars.forEach(s=>{
-    ctx.beginPath();
-    ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
-    ctx.fill();
-    s.y+=0.2;
-    if(s.y>canvas.height) s.y=0;
-  });
-  requestAnimationFrame(draw);
-}
-draw();
-
-// CLICK EFECTO
-document.addEventListener("click",()=>confeti(20));
+// TAP = EFECTO
+document.addEventListener("click", lanzarConfeti);
 </script>
 
 </body>
