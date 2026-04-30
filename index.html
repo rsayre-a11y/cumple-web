@@ -8,7 +8,7 @@
 <style>
 body {
   margin: 0;
-  font-family: 'Segoe UI', sans-serif;
+  font-family: Arial;
   background: linear-gradient(135deg, #0f0014, #2b0033);
   color: white;
   text-align: center;
@@ -42,7 +42,7 @@ body {
 
 button {
   margin: 10px;
-  padding: 10px 20px;
+  padding: 12px 20px;
   border-radius: 10px;
   border: none;
   background: #ff4b5c;
@@ -57,34 +57,24 @@ button {
   margin: 20px auto;
   max-width: 300px;
 }
-
-/* CONFETI */
-.confeti {
-  position: fixed;
-  width: 6px;
-  height: 6px;
-  top: -10px;
-  animation: caer linear forwards;
-}
-
-@keyframes caer {
-  to {transform: translateY(110vh);}
-}
 </style>
 </head>
 
 <body>
 
+<!-- PANTALLA INICIAL -->
 <div id="inicio">
   <button onclick="iniciar()">🎁 Abrir sorpresa</button>
 </div>
 
+<!-- CONTENIDO -->
 <div class="container" id="contenido">
 
 <h1>🎉 Feliz Cumpleaños Anyely 🎉</h1>
 <p>De Ronaldo 💖</p>
 
 <button onclick="verMensaje()">💌 Ver mensaje</button>
+<button onclick="toggleMusica()">🎵 Música</button>
 
 <div class="card" id="card">
   <p>
@@ -100,59 +90,50 @@ button {
 
 <!-- AUDIO -->
 <audio id="voz">
-  <source src="voz1.mp3">
+  <source src="voz1.mp3" type="audio/mpeg">
 </audio>
 
 <audio id="musica" loop>
-  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3">
+  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
 </audio>
 
 <script>
-// INICIO
+let voz = document.getElementById("voz");
+let musica = document.getElementById("musica");
+
+// INICIAR
 function iniciar() {
   document.getElementById("inicio").style.display = "none";
   document.getElementById("contenido").style.display = "block";
 
-  let voz = document.getElementById("voz");
-  let musica = document.getElementById("musica");
+  // Reproducir voz (esto sí funciona porque es por clic)
+  voz.play().catch(() => {
+    alert("Toca el botón de música si no suena 🔊");
+  });
 
-  voz.play();
-
-  // cuando termina tu voz
+  // Cuando termina la voz → empieza música
   voz.onended = function() {
-    musica.volume = 0;
-    musica.play();
-
-    // fade in de música
-    let vol = 0;
-    let subir = setInterval(() => {
-      if (vol < 1) {
-        vol += 0.05;
-        musica.volume = vol;
-      } else {
-        clearInterval(subir);
-      }
-    }, 200);
+    musica.volume = 0.2;
+    musica.play().catch(() => {});
   };
+}
+
+// BOTÓN MÚSICA
+function toggleMusica() {
+  if (!voz.paused) {
+    voz.pause();
+  }
+
+  if (musica.paused) {
+    musica.play();
+  } else {
+    musica.pause();
+  }
 }
 
 // MENSAJE
 function verMensaje() {
   document.getElementById("card").style.display = "block";
-  lanzarConfeti();
-}
-
-// CONFETI
-function lanzarConfeti() {
-  for (let i = 0; i < 60; i++) {
-    let c = document.createElement("div");
-    c.className = "confeti";
-    c.style.left = Math.random()*100 + "vw";
-    c.style.background = ["red","yellow","blue","white"][Math.floor(Math.random()*4)];
-    c.style.animationDuration = (Math.random()*3 + 2) + "s";
-    document.body.appendChild(c);
-    setTimeout(()=>c.remove(),5000);
-  }
 }
 </script>
 
