@@ -1,17 +1,200 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Feliz Cumple 🎂</title>
+<meta charset="UTF-8">
+<title>Anyely 💖</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  color: white;
+  overflow: hidden;
+  background: radial-gradient(circle, #1a001f, #000);
+}
+
+canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 0;
+}
+
+.contenido {
+  position: relative;
+  z-index: 2;
+}
+
+h1 {
+  margin-top: 60px;
+  font-size: 45px;
+}
+
+button {
+  padding: 12px 20px;
+  margin: 8px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+.carta {
+  display: none;
+  max-width: 600px;
+  margin: auto;
+  background: rgba(255,255,255,0.1);
+  padding: 20px;
+  border-radius: 20px;
+}
+
+/* Corazones */
+.corazon {
+  position: fixed;
+  color: pink;
+  font-size: 20px;
+  animation: subir 5s linear infinite;
+}
+
+@keyframes subir {
+  from {transform: translateY(0);}
+  to {transform: translateY(-100vh);}
+}
+</style>
 </head>
-<body style="text-align:center; font-family:Arial; background:pink;">
 
-  <h1>🎉 ¡Feliz Cumpleaños! 🎉</h1>
-  <p>Que tengas un día increíble 🥳</p>
+<body>
 
-  <button onclick="alert('🎁 Sorpresa! Eres increíble 🎉')">
-    Haz clic aquí
-  </button>
+<canvas id="fondo"></canvas>
+
+<div class="contenido">
+  <h1>🎉 ¡Feliz Cumpleaños Anyely! 🎉</h1>
+  <h3>De Ronaldo 💖</h3>
+
+  <h2 id="texto"></h2>
+
+  <button onclick="mostrarCarta()">💌 Ver mensaje</button>
+  <button onclick="toggleMusica()">🎵 Música</button>
+
+  <div class="carta" id="carta">
+    <p>
+      Anyely... 💖<br><br>
+      Hoy no es un día cualquiera ✨<br>
+      Hoy celebra el mundo el día en que llegaste 🌍<br><br>
+      Eres alguien muy especial, y mereces lo mejor 🥳<br>
+      Que nunca te falte una sonrisa 😊<br><br>
+      Sigue brillando siempre 🌟<br><br>
+      — Ronaldo 💌
+    </p>
+  </div>
+</div>
+
+<audio id="musica" loop>
+  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3">
+</audio>
+
+<script>
+// TEXTO ESCRIBIÉNDOSE
+let mensaje = "Hoy celebramos algo muy especial 🎂✨";
+let i = 0;
+function escribir() {
+  if (i < mensaje.length) {
+    document.getElementById("texto").innerHTML += mensaje.charAt(i);
+    i++;
+    setTimeout(escribir, 50);
+  }
+}
+escribir();
+
+// CARTA
+function mostrarCarta() {
+  document.getElementById("carta").style.display = "block";
+}
+
+// MÚSICA
+let audio = document.getElementById("musica");
+function toggleMusica() {
+  if (audio.paused) {
+    audio.play();
+  } else {
+    audio.pause();
+  }
+}
+
+// CONFETI ANIMADO
+function confeti(x, y) {
+  for (let i = 0; i < 30; i++) {
+    let div = document.createElement("div");
+    div.style.position = "fixed";
+    div.style.width = "6px";
+    div.style.height = "6px";
+    div.style.background = ["red","yellow","blue","white"][Math.floor(Math.random()*4)];
+    div.style.left = x + "px";
+    div.style.top = y + "px";
+    document.body.appendChild(div);
+
+    let dx = (Math.random()-0.5)*10;
+    let dy = Math.random()*-10;
+
+    let intervalo = setInterval(() => {
+      let top = parseFloat(div.style.top);
+      let left = parseFloat(div.style.left);
+      div.style.top = (top - dy) + "px";
+      div.style.left = (left + dx) + "px";
+      dy -= 0.3;
+
+      if (top > window.innerHeight) {
+        clearInterval(intervalo);
+        div.remove();
+      }
+    }, 30);
+  }
+}
+
+// CLICK = EFECTO
+document.addEventListener("click", (e) => {
+  confeti(e.clientX, e.clientY);
+});
+
+// CORAZONES
+setInterval(() => {
+  let c = document.createElement("div");
+  c.className = "corazon";
+  c.innerHTML = "💖";
+  c.style.left = Math.random() * 100 + "vw";
+  document.body.appendChild(c);
+  setTimeout(()=>c.remove(),5000);
+}, 500);
+
+// FONDO PARTICULAS
+let canvas = document.getElementById("fondo");
+let ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let estrellas = [];
+for (let i = 0; i < 100; i++) {
+  estrellas.push({
+    x: Math.random()*canvas.width,
+    y: Math.random()*canvas.height,
+    r: Math.random()*2
+  });
+}
+
+function animar() {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle = "white";
+  estrellas.forEach(e => {
+    ctx.beginPath();
+    ctx.arc(e.x, e.y, e.r, 0, Math.PI*2);
+    ctx.fill();
+    e.y += 0.2;
+    if (e.y > canvas.height) e.y = 0;
+  });
+  requestAnimationFrame(animar);
+}
+animar();
+</script>
 
 </body>
 </html>
